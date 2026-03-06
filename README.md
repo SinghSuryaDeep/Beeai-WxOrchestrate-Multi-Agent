@@ -1,11 +1,11 @@
 # 🚗 Predictive Maintenance Automation
 ### A Production-Grade Enterprise Agentic AI Demo - Multi-Agent, Observable, Framework-Agnostic and Scalable
-#### BeeAI + IBM watsonx + IBM Granite Model + Watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)
+#### BeeAI + IBM watsonx + IBM Granite Model + watsonx Orchestrate (Agentic Workflow + External Agents) + Langfuse (Observability)
 
 [![IBM watsonx](https://img.shields.io/badge/IBM-watsonx-blue)](https://www.ibm.com/watsonx)
 [![BeeAI Agentic Framework](https://img.shields.io/badge/BeeAI-Framework-green)](https://github.com/i-am-bee/bee-agent-framework)
 [![Granite Models](https://img.shields.io/badge/Granite-4.0-orange)](https://www.ibm.com/granite)
-[![Watsonx Orchestrate](https://img.shields.io/badge/Watsonx-Orchestrate-purple)](https://www.ibm.com/watsonx/orchestrate)
+[![watsonx Orchestrate](https://img.shields.io/badge/watsonx-Orchestrate-purple)](https://www.ibm.com/watsonx/orchestrate)
 
 ---
 
@@ -18,7 +18,7 @@
 - [Project Structure](#-project-structure)
 - [Local Setup](#-local-setup)
 - [IBM Code Engine Deployment](#-ibm-code-engine-deployment)
-- [Watsonx Orchestrate Integration](#-watsonx-orchestrate-integration)
+- [watsonx Orchestrate Integration](#-watsonx-orchestrate-integration)
 - [Observability with Langfuse](#-observability-with-langfuse)
 - [Testing](#-testing)
 - [API Reference](#-api-reference)
@@ -35,7 +35,7 @@ This project demonstrates a **production-ready AI agent integration** for predic
 | **🤖 BeeAI Framework** | Agentic AI with tool orchestration |
 | **🧠 IBM watsonx** | Enterprise LLM platform and infrastructure |
 | **💎 Granite Models** | High-performance instruction-following model |
-| **🔗 Watsonx Orchestrate** | Workflow automation and agent management |
+| **🔗 watsonx Orchestrate** | Workflow automation and agent management |
 | **📊 Langfuse** | End-to-end AI observability and tracing |
 
 ### What This System Does
@@ -57,7 +57,7 @@ This project demonstrates a **production-ready AI agent integration** for predic
 ```
 User Query: "Check maintenance for TRUCK-22"
     ↓
-Watsonx Orchestrate (maintenance_agent)
+watsonx Orchestrate (maintenance_agent)
     ├─→ Calls: BeeAI external agent (HTTP POST /chat/completions)
     │     ↓
     │   BeeAI Service (FastAPI)
@@ -110,7 +110,7 @@ User receives: Complete maintenance plan with booking details
 - 💰 **Cost-Effective**: Cheaper than GPT-3.5 and other LLMs with comparable performance
 - 🌍 **Enterprise-Grade**: SLA guarantees, multi-region deployment, compliance-ready (GDPR, SOC2, HIPAA)
 
-### Watsonx Orchestrate Integration
+### watsonx Orchestrate Integration
 
 - 🤖 **Native Agents**: maintenance_agent, scheduler_agent
 - 🔀 **Workflows**: 5-step predictive maintenance flow
@@ -137,7 +137,7 @@ User receives: Complete maintenance plan with booking details
    - Project created with Granite model access
    - API key generated
 
-2. **Watsonx Orchestrate**
+2. **watsonx Orchestrate**
    - Subscription active
    - ADK installed: `pip install ibm-watsonx-orchestrate`
 
@@ -174,24 +174,24 @@ User receives: Complete maintenance plan with booking details
 │   ├── __main__.py             # Entry point
 │   ├── Dockerfile
 │   ├── docker-compose.yml
-│   ├── pyproject.toml
+│   ├── pyproject.toml          # Package dependencies and version pins
 │   ├── setup_local.sh          # Local development setup
 │   └── deploy_to_code_engine.sh # IBM Code Engine deployment
 │
 ├── agents_observability/
 │   └── langfuse_config.yml     # Langfuse configuration
 │
-├── wxo_tools/                  # Watsonx Orchestrate tools
+├── wxo_tools/                  # watsonx Orchestrate tools
 │   ├── predict_failure.py
 │   ├── maintenance_cost_tool.py
 │   ├── book_slot_tool.py
 │   ├── order_parts_tool.py
 │   └── send_notification_tool.py
 │
-├── wxo_flows/                  # Watsonx Orchestrate flows
+├── wxo_flows/                  # watsonx Orchestrate flows
 │   └── predictive_maintenance_flow.py
 │
-├── wxo_agents/                 # Watsonx Orchestrate agents
+├── wxo_agents/                 # watsonx Orchestrate agents
 │   ├── maintenance_agent.yaml
 │   └── maintenance_scheduler_agent.yaml
 │
@@ -210,7 +210,7 @@ User receives: Complete maintenance plan with booking details
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/SinghSuryaDeep/Beeai-WxOrchestrate-Multi-Agent.git
+git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
 cd beeai-a2a/automotive_system
 cd beeai_service
 ```
@@ -410,11 +410,11 @@ ibmcloud ce app delete --name beeai-maintenance --force
 
 ---
 
-## 🔗 Watsonx Orchestrate Integration
+## 🔗 watsonx Orchestrate Integration
 
 ### Step 1: Authenticate with WXO Environment
 
-First, activate your Watsonx Orchestrate environment:
+First, activate your watsonx Orchestrate environment:
 ```bash
 orchestrate env activate <your_environment_name> --api-key <your_api_key>
 ```
@@ -437,7 +437,7 @@ This imports:
 
 #### WXO UI
 
-1. **Navigate to**: Watsonx Orchestrate → Agents → Import agent
+1. **Navigate to**: watsonx Orchestrate → Agents → Import agent
 
 ![Import Agent Type](docs/wxo-import-agent-type.png)
 
@@ -695,7 +695,7 @@ data: [DONE]
 
 - **BeeAI Framework**: https://github.com/i-am-bee/bee-agent-framework
 - **IBM watsonx**: https://www.ibm.com/docs/en/watsonx
-- **Watsonx Orchestrate**: https://www.ibm.com/docs/en/watsonx/watson-orchestrate
+- **watsonx Orchestrate**: https://www.ibm.com/docs/en/watsonx/watson-orchestrate
 - **Langfuse**: https://langfuse.com/docs
 - **Granite Models**: https://www.ibm.com/granite
 
@@ -703,4 +703,4 @@ data: [DONE]
 
 **Built for enterprise AI integration**
 
-*Showcasing: BeeAI + watsonx + Granite + Watsonx Orchestrate + Langfuse*
+*Showcasing: BeeAI + watsonx + Granite + watsonx Orchestrate + Langfuse*
