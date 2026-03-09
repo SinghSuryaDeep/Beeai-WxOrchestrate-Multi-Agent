@@ -263,7 +263,7 @@ The setup script uses Podman and Podman Compose to build and run the container. 
 brew install podman podman-compose
 ```
 
-### Step 5: Start BeeAI Service
+### Step 4: Start BeeAI Service
 
 ```bash
 chmod +x setup_local.sh
@@ -287,7 +287,7 @@ If something goes wrong, view the last 30 lines of container logs with:
 podman compose logs --tail=30
 ```
 
-### Step 6: Test Local Deployment
+### Step 5: Test Local Deployment
 
 #### Health Check
 
@@ -329,7 +329,7 @@ data: {"id":"chatcmpl-beeai-xxx","choices":[{"delta":{"content":"Vehicle TRUCK-2
 data: [DONE]
 ```
 
-### Step 7: View Logs
+### Step 6: View Logs
 
 ```bash
 podman compose logs -f
