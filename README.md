@@ -211,8 +211,8 @@ User receives: Complete maintenance plan with booking details
 ### Step 1: Clone Repository
 
 ```bash
-git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
-cd oic-i-agentic-ai-tutorials/beeai-a2a/automotive_system/beeai_service
+git clone https://github.com/SinghSuryaDeep/Beeai-WxOrchestrate-Multi-Agent.git
+cd beeai-a2a/automotive_system/beeai_service
 ```
 
 ### Step 2: Configure Environment
