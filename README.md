@@ -445,20 +445,38 @@ orchestrate env activate <your_environment_name> --api-key <your_api_key>
 ```
 ⚠️ **Note**: Replace `your_environment_name` and `your_api_key` with your actual WXO environment credentials.
 
-### Step 2: Import All Components
+### Step 2: Configure Langfuse Before Importing
+
+Before running the import script, update `agents_observability/langfuse_config.yml` with your Langfuse credentials so observability is active from the first agent run:
+
+```yaml
+spec_version: v1
+kind: langfuse
+project_id: predictive-maintenance-fleet
+api_key: "sk-lf-<your-secret-key>"
+url: "https://cloud.langfuse.com/api/public/otel"
+host_health_uri: "https://cloud.langfuse.com"
+config_json:
+  public_key: "pk-lf-<your-public-key>"
+  mask_pii: false
+```
+
+> Don't have a Langfuse account yet? Sign up free at [cloud.langfuse.com](https://cloud.langfuse.com), create a project, and copy your keys from **Settings → API Keys**. If you prefer to skip observability, leave the default placeholder values — the script will still complete.
+
+### Step 3: Import All Components
 ```bash
 cd scripts
 chmod +x import_all.sh
 ./import_all.sh
 ```
 
-This imports:
+This imports everything in one go, including Langfuse configuration as the final step:
 - ✅ 5 WXO Tools (predict, cost, order, book, notify)
 - ✅ 1 Workflow (predictive_maintenance_flow)
 - ✅ 2 Agents (maintenance_agent, scheduler_agent)
 - ✅ Langfuse observability configuration
 
-### Step 3: Register BeeAI as External Agent
+### Step 4: Register BeeAI as External Agent
 
 #### WXO UI
 
@@ -483,7 +501,7 @@ This imports:
 
 4. **Import agent** → Done
 
-### Step 4: Test Integration
+### Step 5: Test Integration
 
 **In WXO Chat:**
 ```
@@ -519,7 +537,7 @@ Scheduled Time: 2025-11-22 at 15:00 (local time)
 Driver Notified: driver-1
 ```
 
-### Step 5: Schedule Recurring Maintenance
+### Step 6: Schedule Recurring Maintenance
 
 In the WXO Chat UI, search for `maintenance_scheduler_agent` and type:
 
@@ -562,7 +580,7 @@ After successfully creating a schedule, WXO returns a response similar to:
 
 ## 📊 Observability with Langfuse
 
-### Step 1: Configure Langfuse
+### Step 1: Create a Langfuse Account
 
 1. **Create account**: [cloud.langfuse.com](https://cloud.langfuse.com)
 2. **Create project**: "predictive-maintenance-fleet"
@@ -570,28 +588,11 @@ After successfully creating a schedule, WXO returns a response similar to:
 
 ### Step 2: Update Configuration
 
-Edit `agents_observability/langfuse_config.yml`:
+Edit `agents_observability/langfuse_config.yml` with your actual keys (see [watsonx Orchestrate Integration → Step 2](#step-2-configure-langfuse-before-importing)).
 
-```yaml
-spec_version: v1
-kind: langfuse
-project_id: predictive-maintenance-fleet
-api_key: "sk-lf-your-secret-key-here"
-url: "https://cloud.langfuse.com/api/public/otel"
-host_health_uri: "https://cloud.langfuse.com"
-config_json:
-  public_key: "pk-lf-your-public-key-here"
-  mask_pii: false
-```
+> Langfuse is applied to WXO automatically as the final step of `import_all.sh` — no separate command needed. Running the script with your credentials filled in is all that's required.
 
-### Step 3: Import to WXO
-
-```bash
-orchestrate settings observability langfuse configure \
-  --config-file=agents_observability/langfuse_config.yml
-```
-
-### Step 4: View Traces
+### Step 3: View Traces
 
 **Langfuse Dashboard:**
 
