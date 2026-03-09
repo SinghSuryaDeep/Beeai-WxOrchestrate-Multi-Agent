@@ -461,7 +461,7 @@ config_json:
   mask_pii: false
 ```
 
-> Don't have a Langfuse account yet? Sign up free at [cloud.langfuse.com](https://cloud.langfuse.com), create a project, and copy your keys from **Settings → API Keys**. If you prefer to skip observability, leave the default placeholder values — the script will still complete.
+> Don't have a Langfuse account yet? Sign up free at [cloud.langfuse.com](https://cloud.langfuse.com), create a project, and copy your keys from **Settings → API Key & Public Key**. If you prefer to skip observability, leave the default placeholder values — the script will still complete.
 
 ### Step 3: Import All Components
 ```bash
