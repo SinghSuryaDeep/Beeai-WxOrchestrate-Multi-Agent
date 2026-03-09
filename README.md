@@ -149,7 +149,8 @@ User receives: Complete maintenance plan with booking details
 ### Development Tools
 
 - Python 3.11+
-- Docker or Podman
+- Podman and podman-compose (`brew install podman podman-compose` on macOS)
+- IBM Cloud CLI (for Code Engine deployment)
 - Git
 - curl (for testing)
 
@@ -211,13 +212,18 @@ User receives: Complete maintenance plan with booking details
 
 ```bash
 git clone https://github.com/IBM/oic-i-agentic-ai-tutorials.git
-cd beeai-a2a/automotive_system
-cd beeai_service
+cd oic-i-agentic-ai-tutorials/beeai-a2a/automotive_system/beeai_service
 ```
 
 ### Step 2: Configure Environment
 
-Create `.env` file in `beeai_service/` directory:
+Copy the provided template and update with your credentials:
+
+```bash
+cp env.example .env
+```
+
+The template `.env` file is available in the repository. Only the values wrapped inside `< >` need to be replaced:
 
 ```bash
 # BeeAI Service Configuration
@@ -234,20 +240,32 @@ BEEAI_LOG_LEVEL=INFO
 BEEAI_LOG_INTERMEDIATE_STEPS=false
 
 # IBM watsonx.ai Configuration
-WATSONX_API_KEY=your-watsonx-api-key
-WATSONX_URL=https://us-south.ml.cloud.ibm.com
-WATSONX_PROJECT_ID=your-watsonx-project-id
+WATSONX_API_KEY=<your-watsonx-api-key>
+WATSONX_URL=<your-watsonx-url>
+WATSONX_PROJECT_ID=<your-watsonx-project-id>
 WATSONX_MODEL_ID=ibm/granite-4-h-small
 WATSONX_MAX_TOKENS=4096
 WATSONX_TEMPERATURE=0.7
 ```
 
-⚠️ **Note**: Replace `your-watsonx-api-key` and `your-watsonx-project-id` with your actual credentials.
+**Where to obtain these values:**
+- **`WATSONX_API_KEY`**: IBM Cloud console → Manage → Access (IAM) → API Keys
+- **`WATSONX_PROJECT_ID`**: Available inside your watsonx.ai project settings
+- **`WATSONX_URL`**: The base endpoint URL for the watsonx.ai service in your IBM Cloud region
 
-### Step 3: Start BeeAI Service
+⚠️ **Note**: The `setup_local.sh` script validates four required variables before starting: `WATSONX_API_KEY`, `WATSONX_URL`, `WATSONX_PROJECT_ID`, and `BEEAI_API_KEY`. Ensure all four are present in your `.env` file.
+
+### Step 3: Install Podman (Prerequisite)
+
+The setup script uses Podman and Podman Compose to build and run the container. On macOS, install using Homebrew:
 
 ```bash
-cd beeai_service
+brew install podman podman-compose
+```
+
+### Step 5: Start BeeAI Service
+
+```bash
 chmod +x setup_local.sh
 ./setup_local.sh
 ```
@@ -263,7 +281,13 @@ You should see:
 - ✅ Agent initialized successfully
 - ✅ Server running at `http://localhost:8080`
 
-### Step 4: Test Local Deployment
+If something goes wrong, view the last 30 lines of container logs with:
+
+```bash
+podman compose logs --tail=30
+```
+
+### Step 6: Test Local Deployment
 
 #### Health Check
 
@@ -305,13 +329,9 @@ data: {"id":"chatcmpl-beeai-xxx","choices":[{"delta":{"content":"Vehicle TRUCK-2
 data: [DONE]
 ```
 
-### Step 5: View Logs
+### Step 7: View Logs
 
 ```bash
-# Docker
-docker compose logs -f
-
-# Podman
 podman compose logs -f
 ```
 
@@ -321,21 +341,26 @@ podman compose logs -f
 
 ### Step 1: Update `.env` with IBM Cloud Credentials
 
-Add these to your `.env` file:
+Add these to your `.env` file. Only the values wrapped inside `< >` need to be replaced:
 
 ```bash
 # IBM Cloud Configuration for Deployment
-IBM_CLOUD_API_KEY=your-ibm-cloud-api-key
-NAMESPACE=your-container-registry-namespace
+IBM_CLOUD_API_KEY=<your-ibm-cloud-api-key>
+NAMESPACE=<your-container-registry-namespace>
 IMAGE_NAME=beeai_maintenance_service
 IMAGE_TAG=v1
 APP_NAME=beeai-maintenance
-PROJECT_ID=your-code-engine-project-id
-RESOURCE_GROUP=your-resource-group
-REGION=us-south
+PROJECT_ID=<your-code-engine-project-id>
+RESOURCE_GROUP=<your-resource-group>
+REGION=<your-region>
 ```
 
-⚠️ **Note**: Replace `=your-ibm-cloud-api-key`, `your-container-registry-namespace`, `your-code-engine-project-id` and `your-resource-group` with your actual credentials.
+**Where to obtain these values:**
+- **`IBM_CLOUD_API_KEY`**: IBM Cloud IAM → API Keys page
+- **`NAMESPACE`**: Your IBM Container Registry namespace. Create or view it with: `ibmcloud cr namespace-add <namespace>`
+- **`PROJECT_ID`**: Your IBM Code Engine project ID, visible in the Code Engine dashboard
+- **`RESOURCE_GROUP`**: The IBM Cloud resource group where Code Engine is deployed
+- **`REGION`**: The IBM Cloud region where your Code Engine project is created (commonly `us-south`)
 
 ### Step 2: Deploy to Code Engine
 
@@ -494,6 +519,45 @@ Scheduled Time: 2025-11-22 at 15:00 (local time)
 Driver Notified: driver-1
 ```
 
+### Step 5: Schedule Recurring Maintenance
+
+In the WXO Chat UI, search for `maintenance_scheduler_agent` and type:
+
+```
+Schedule daily maintenance checks for TRUCK-22 at 9am EST
+```
+
+The scheduler agent will create a cron-based schedule and confirm it is active. You can also manage schedules:
+
+```
+List all schedules
+Delete schedule <schedule_id>
+```
+
+**Understanding the Scheduler Response:**
+
+After successfully creating a schedule, WXO returns a response similar to:
+
+```json
+{
+  "schedule_id": "18fc1ba0-2c4b-4e23-baf2-9e421c395a1e",
+  "schedule_name": "predict_maintenance_TRUCK-22_daily_9AM",
+  "schedule_pattern": "0 09 * * *",
+  "schedule_timezone": "America/New_York",
+  "schedule_limit": 100,
+  "total": 1
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `schedule_id` | Unique identifier — use this to list, update, or delete the schedule |
+| `schedule_name` | Human-readable name combining the flow ID, recurrence, and timezone |
+| `schedule_pattern` | Cron expression defining when the flow runs (`0 09 * * *` = daily at 9 AM) |
+| `schedule_timezone` | Timezone in which the scheduler operates |
+| `schedule_limit` | How many times the scheduler will trigger before stopping |
+| `total` | Number of schedules created in this response |
+
 ---
 
 ## 📊 Observability with Langfuse
@@ -517,7 +581,7 @@ url: "https://cloud.langfuse.com/api/public/otel"
 host_health_uri: "https://cloud.langfuse.com"
 config_json:
   public_key: "pk-lf-your-public-key-here"
-mask_pii: false
+  mask_pii: false
 ```
 
 ### Step 3: Import to WXO
